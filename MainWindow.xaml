@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TWlauncher"
+        Title="时之旅者"
         mc:Ignorable="d"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -26,7 +27,8 @@
                     <Button Style="{StaticResource MainMinimize}" Click="MainMinimize_Click" Margin="0,0,12,0"/>
                     <Button Style="{StaticResource MainClose}" Click="MainClose_Click" Margin="0,0,12,0"/>
                 </StackPanel>
-
+                <!-- 右下角通用操作按钮 -->
+                <Button Content="启动游戏" Style="{StaticResource GameAction}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,48,48"/>
             </Grid>
         </Border>
     </Grid>

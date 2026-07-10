@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
+    
+    
     <!-- Setting图标 -->
     <PathGeometry x:Key="Icon_Setting">
         M512 661.333333C429.653333 661.333333 362.666667 594.346667 362.666667 512 362.666667 429.653333 429.653333 362.666667 512 362.666667 594.346667 362.666667 661.333333 429.653333 661.333333 512 661.333333 594.346667 594.346667 661.333333 512 661.333333M829.013333 553.386667C830.72 539.733333 832 526.08 832 512 832 497.92 830.72 483.84 829.013333 469.333333L919.04 399.786667C927.146667 393.386667 929.28 381.866667 924.16 372.48L838.826667 224.853333C833.706667 215.466667 822.186667 211.626667 812.8 215.466667L706.56 258.133333C684.373333 241.493333 661.333333 226.986667 634.453333 216.32L618.666667 103.253333C616.96 93.013333 608 85.333333 597.333333 85.333333L426.666667 85.333333C416 85.333333 407.04 93.013333 405.333333 103.253333L389.546667 216.32C362.666667 226.986667 339.626667 241.493333 317.44 258.133333L211.2 215.466667C201.813333 211.626667 190.293333 215.466667 185.173333 224.853333L99.84 372.48C94.293333 381.866667 96.853333 393.386667 104.96 399.786667L194.986667 469.333333C193.28 483.84 192 497.92 192 512 192 526.08 193.28 539.733333 194.986667 553.386667L104.96 624.213333C96.853333 630.613333 94.293333 642.133333 99.84 651.52L185.173333 799.146667C190.293333 808.533333 201.813333 811.946667 211.2 808.533333L317.44 765.44C339.626667 782.506667 362.666667 797.013333 389.546667 807.68L405.333333 920.746667C407.04 930.986667 416 938.666667 426.666667 938.666667L597.333333 938.666667C608 938.666667 616.96 930.986667 618.666667 920.746667L634.453333 807.68C661.333333 796.586667 684.373333 782.506667 706.56 765.44L812.8 808.533333C822.186667 811.946667 833.706667 808.533333 838.826667 799.146667L924.16 651.52C929.28 642.133333 927.146667 630.613333 919.04 624.213333L829.013333 553.386667Z
@@ -17,6 +18,7 @@
     <PathGeometry x:Key="Icon_User">
         M512 512C614.4 512 698.88 427.52 698.88 325.12 698.88 222.72 614.4 138.24 512 138.24 409.6 138.24 325.12 222.72 325.12 325.12 325.12 427.52 409.6 512 512 512ZM512 588.8C389.12 588.8 143.36 652.8 143.36 775.68L143.36 885.76 880.64 885.76 880.64 775.68C880.64 652.8 634.88 588.8 512 588.8Z
     </PathGeometry>
+    
 
     <!-- 主界面Setting按钮 -->
     <Style x:Key="MainSetting" TargetType="Button">
@@ -44,7 +46,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
     <!-- 主界面Minimize按钮 -->
     <Style x:Key="MainMinimize" TargetType="Button">
         <Setter Property="Width" Value="32"/>
@@ -71,8 +72,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-     <!--主界面Close按钮--> 
+    <!--主界面Close按钮-->
     <Style x:Key="MainClose" TargetType="Button">
         <Setter Property="Width" Value="32"/>
         <Setter Property="Height" Value="32"/>
@@ -98,7 +98,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
     <!-- 主界面User按钮 -->
     <Style x:Key="MainUser" TargetType="Button">
         <Setter Property="Width" Value="32"/>
@@ -119,6 +118,45 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="#33ffffff"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- 右下角通用操作按钮 -->
+    <Style x:Key="GameAction" TargetType="Button">
+        <Setter Property="Width" Value="240"/>
+        <Setter Property="Height" Value="64"/>
+        <Setter Property="Background" Value="#E6E6E6"/>
+        <Setter Property="Foreground" Value="#333333"/>
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontFamily" Value="Microsoft YaHei"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="4">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"
+                                          TextElement.FontFamily="{TemplateBinding FontFamily}"
+                                          TextElement.FontSize="{TemplateBinding FontSize}"
+                                          TextElement.FontWeight="{TemplateBinding FontWeight}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#FFFFFF"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="#E6E6E6"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
