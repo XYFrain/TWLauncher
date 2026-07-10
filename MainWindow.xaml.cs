@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -65,6 +65,22 @@ namespace TWlauncher
             // 窗口居中显示
             this.Left = (screenWidth - winW) / 2;
             this.Top = (screenHeight - winH) / 2;
+        }
+
+        /// <summary>
+        /// 关闭按钮点击事件
+        /// </summary>
+        private void MainClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        /// <summary>
+        /// 最小化按钮点击事件
+        /// </summary>
+        private void MainMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
         }
     }
 }
