@@ -16,18 +16,17 @@
                 <ImageBrush ImageSource="Images/bg.png" Stretch="UniformToFill"/>
             </Border.Background>
             <Grid>
+                <!-- 顶部拖动区域 -->
+                <Rectangle Height="64" VerticalAlignment="Top" Fill="Transparent" MouseLeftButtonDown="MainDragMove"/>
                 <!-- 左上角用户信息按钮 -->
-                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,16,0,0" Orientation="Horizontal">
-                    <Button Style="{StaticResource MainUser}"/>
-                </StackPanel>
+                <Button Style="{StaticResource MainUser}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,16,0,0"/>
                 <!-- 右上角界面控制按钮 -->
-                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,16,24,0" Orientation="Horizontal">
-                    <Button Style="{StaticResource MainSetting}"/>
-                    <FrameworkElement Width="12"/>
-                    <Button Style="{StaticResource MainMinimize}" Click="MainMinimize_Click"/>
-                    <FrameworkElement Width="12"/>
-                    <Button Style="{StaticResource MainClose}" Click="MainClose_Click"/>
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,16,16,0" Orientation="Horizontal">
+                    <Button Style="{StaticResource MainSetting}" Margin="0,0,12,0"/>
+                    <Button Style="{StaticResource MainMinimize}" Click="MainMinimize_Click" Margin="0,0,12,0"/>
+                    <Button Style="{StaticResource MainClose}" Click="MainClose_Click" Margin="0,0,12,0"/>
                 </StackPanel>
+
             </Grid>
         </Border>
     </Grid>

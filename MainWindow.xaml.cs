@@ -74,5 +74,13 @@ namespace TWlauncher
         {
             this.WindowState = WindowState.Minimized;
         }
+
+        /// <summary>
+        /// 顶部拖动区域 — 按住拖拽移动窗口
+        /// </summary>
+        private void MainDragMove(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
     }
 }
