@@ -163,4 +163,32 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- 通用下载/更新进度条 -->
+    <Style x:Key="GameProgressBar" TargetType="ProgressBar">
+        <Setter Property="Minimum" Value="0"/>
+        <Setter Property="Maximum" Value="100"/>
+        <Setter Property="Background" Value="#CC000000"/>
+        <Setter Property="BorderBrush" Value="#99000000"/>
+        <Setter Property="Foreground" Value="#64B8F5"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ProgressBar">
+                    <Grid>
+                        <Border x:Name="PART_Track"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8"/>
+                        <Border x:Name="PART_Indicator"
+                            HorizontalAlignment="Left"
+                            Margin="3"
+                            Background="{TemplateBinding Foreground}"
+                            CornerRadius="8,0,0,8"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
