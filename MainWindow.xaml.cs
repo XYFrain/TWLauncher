@@ -27,14 +27,6 @@ namespace TWlauncher
 
         public MainWindow()
         {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// 窗口设定
-        /// </summary>
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
             // 获取显示器可用区域（剔除任务栏）
             double screenWidth = SystemParameters.WorkArea.Width;
             double screenHeight = SystemParameters.WorkArea.Height;
@@ -58,13 +50,13 @@ namespace TWlauncher
                 winW = winH * WindowRatio;
             }
 
-            // 赋值窗口宽高
+            // 在窗口显示前设定宽高和位置
             this.Width = winW;
             this.Height = winH;
-
-            // 窗口居中显示
             this.Left = (screenWidth - winW) / 2;
             this.Top = (screenHeight - winH) / 2;
+
+            InitializeComponent();
         }
 
         /// <summary>

@@ -8,7 +8,7 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        Loaded="Window_Loaded">
+        ResizeMode="NoResize">
     <Grid Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Window}}"
           Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}}">
         <Border>
