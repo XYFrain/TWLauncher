@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TWlauncher"
         Title="时之旅者"
+        Icon="Images/时旅@256x256.ico"
         mc:Ignorable="d"
         WindowStyle="None"
         AllowsTransparency="True"

@@ -8,6 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>TWlauncher</RootNamespace>
     <AssemblyName>TWlauncher</AssemblyName>
+    <ApplicationIcon>Images\时旅@256x256.ico</ApplicationIcon>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -100,7 +101,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\bg.png" />
+    <Resource Include="Images\时旅@256x256.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\时旅%40128x128.ico" />
+    <Resource Include="Images\时旅%4064x64.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
