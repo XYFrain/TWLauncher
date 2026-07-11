@@ -29,14 +29,15 @@
                     <Button Style="{StaticResource MainClose}" Click="MainClose_Click" Margin="0,0,12,0"/>
                 </StackPanel>
                 <!-- 右下角通用操作按钮 -->
-                <Button Content="启动游戏" Style="{StaticResource GameAction}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,48,64"/>
+                <Button x:Name="GameAction" Content="启动游戏" Style="{StaticResource GameAction}" Click="GameAction_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,48,64"/>
                 <!-- 底部更新/下载信息栏 -->
-                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="24,0,24,16" Orientation="Vertical">
-                    <!--文本-->
+                <!--<StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="24,0,24,16" Orientation="Vertical">
+                    --><!--文本--><!--
                     <TextBlock Text="下载进度：28.0%  1.2GB / 8.5GB" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#DDDDDD" FontFamily="Microsoft YaHei" FontSize="16" FontWeight="Bold"/>
-                    <!-- 进度条 -->
+                    --><!-- 进度条 --><!--
                     <ProgressBar Style="{StaticResource GameProgressBar}" Value="28" Height="16" Margin="0,4,0,0"/>
-                </StackPanel>
+                </StackPanel>-->
+                <TextBlock x:Name="Info" Text="" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="24,0,0,58" Foreground="#DDDDDD" FontFamily="Microsoft YaHei" FontSize="16" FontWeight="Bold"/>
             </Grid>
         </Border>
     </Grid>

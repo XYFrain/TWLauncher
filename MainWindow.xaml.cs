@@ -1,17 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TWlauncher
 {
@@ -24,6 +13,7 @@ namespace TWlauncher
         private const double WindowRatio= 1920.0 / 1080.0;
         // 窗口最大屏幕占比
         private const double maxScale = 0.6;
+        private GameActionState gameActionState;
 
         public MainWindow()
         {
@@ -57,6 +47,38 @@ namespace TWlauncher
             this.Top = (screenHeight - winH) / 2;
 
             InitializeComponent();
+            UpdateGameAction();
+        }
+
+        private void UpdateGameAction()
+        {
+            gameActionState = new ResourceChecker().Check();
+
+            switch (gameActionState)
+            {
+                case GameActionState.Download:
+                    GameAction.Content = "下载游戏";
+                    break;
+                case GameActionState.Update:
+                    GameAction.Content = "更新游戏";
+                    break;
+                case GameActionState.Ready:
+                    GameAction.Content = "启动游戏";
+                    break;
+            }
+        }
+
+        private void GameAction_Click(object sender, RoutedEventArgs e)
+        {
+            switch (gameActionState)
+            {
+                case GameActionState.Download:
+                    break;
+                case GameActionState.Update:
+                    break;
+                case GameActionState.Ready:
+                    break;
+            }
         }
 
         /// <summary>
@@ -82,5 +104,6 @@ namespace TWlauncher
         {
             this.DragMove();
         }
+
     }
 }

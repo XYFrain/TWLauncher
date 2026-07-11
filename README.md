@@ -1,5 +1,19 @@
 # TWLauncher
 
+## Minecraft 1.12.2 本地启动
+
+启动器固定从程序同级目录的 `Game` 文件夹读取 Minecraft 1.12.2，不会使用 `%AppData%\\.minecraft`。请准备以下文件：
+
+```text
+Game/
+  Minecraft.json
+  Minecraft.jar
+  libraries/
+  assets/
+```
+
+点击“启动游戏”会以离线用户名 `Player` 启动。可选地，将 Java 8 放在 `Game/java/bin/javaw.exe`；否则启动器会使用系统 PATH 中的 `javaw.exe`。
+
 一个基于 WPF（.NET Framework 4.8）打造的启动器界面。
 
 ## 📸 界面预览
