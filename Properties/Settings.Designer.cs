@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TWlauncher.Properties
+namespace TWLauncher.Properties
 {
 
 

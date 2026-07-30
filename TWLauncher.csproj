@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{27609190-BEED-4DFF-BF1A-A60EAEC5B278}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TWlauncher</RootNamespace>
-    <AssemblyName>TWlauncher</AssemblyName>
+    <RootNamespace>TWLauncher</RootNamespace>
+    <AssemblyName>TWLauncher</AssemblyName>
     <ApplicationIcon>Images\时旅@256x256.ico</ApplicationIcon>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -67,15 +67,38 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Paths.cs" />
+    <Compile Include="Service\ConfigService.cs" />
+    <Compile Include="Service\DownloadService.cs" />
+    <Compile Include="Service\LaunchService.cs" />
+    <Compile Include="Service\JavaService.cs" />
+    <Compile Include="Service\MainWindowService.cs" />
+    <Compile Include="Service\CheckService.cs" />
+    <Compile Include="Utils\LogUtil.cs" />
+    <Compile Include="Utils\FileUtil.cs" />
+    <Compile Include="Utils\HttpUtil.cs" />
+    <Compile Include="Utils\JsonUtil.cs" />
+    <Compile Include="Utils\ByteUtil.cs" />
+    <Compile Include="Utils\RuleUtil.cs" />
+    <Compile Include="MainWindow\MainButtonViewModel.cs" />
+    <Compile Include="MainWindow\ProgressViewModel.cs" />
+    <Compile Include="Controller\MainButtonController.cs" />
+    <Compile Include="Controller\ConfigController.cs" />
+    <Compile Include="Controller\MainWindowController.cs" />
+    <Compile Include="MainWindow\MainViewModel.cs" />
+    <Compile Include="MainWindow\SettingsViewModel.cs" />
+    <Compile Include="MainWindow\RelayCommand.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GameLauncher.cs" />
-    <Compile Include="JsonUtility.cs" />
-    <Compile Include="ResourceChecker.cs" />
-    <Compile Include="ResourceDownloader.cs" />
+
+    <Compile Include="Models\ResourceItem.cs" />
     <Page Include="Styles\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -111,8 +134,8 @@
     <Resource Include="Images\时旅@256x256.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\时旅%40128x128.ico" />
-    <Resource Include="Images\时旅%4064x64.ico" />
+    <Resource Include="Images\时旅@128x128.ico" />
+    <Resource Include="Images\时旅@64x64.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

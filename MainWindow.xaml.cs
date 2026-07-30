@@ -1,109 +1,51 @@
-using System;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using TWLauncher.Controller;
 
-namespace TWlauncher
-{
-    /// <summary>
-    /// MainWindow.xaml 的交互逻辑
-    /// </summary>
-    public partial class MainWindow : Window
-    {
-        // 窗口比例
-        private const double WindowRatio= 1920.0 / 1080.0;
-        // 窗口最大屏幕占比
-        private const double maxScale = 0.6;
-        private GameActionState gameActionState;
+namespace TWLauncher {
+    public partial class MainWindow : Window {
+        internal MainWindow() {
+            DataContext = MainViewModel.Instance;
+            // 2. 按屏幕比例计算窗口大小并居中
+            SetMainWindow(1.7, 0.6);
+            // 3. 解析 XAML，画出所有控件
+            InitializeComponent();
+            // 4. 加载配置文件
+            ConfigController.Load();
+            // 5. 后台异步初始化（网络检测 → Java 检测 → JSON 就绪）
+            MainWindowController.InitializeAsync().ContinueWith(t => {
+                if (t.Exception != null)
+                    Utils.LogUtil.Error(t.Exception);
+            }, TaskContinuationOptions.OnlyOnFaulted);
+        }
 
-        public MainWindow()
-        {
-            // 获取显示器可用区域（剔除任务栏）
+        // ===================== 纯窗口操作 =====================
+        private void DragMove(object sender, MouseButtonEventArgs e) => base.DragMove();
+        private void Minimize(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+        private void Close(object sender, RoutedEventArgs e) => Close();
+        // ===================== 窗口尺寸 =====================
+        private void SetMainWindow(double windowRatio, double maxScale) {
             double screenWidth = SystemParameters.WorkArea.Width;
             double screenHeight = SystemParameters.WorkArea.Height;
 
-            // 限制窗口最大尺寸
             double maxWindowWidth = screenWidth * maxScale;
             double maxWindowHeight = screenHeight * maxScale;
 
             double winW, winH;
-
-            // 以宽度优先计算，若高度超出屏幕则改用高度计算
-            double tempH = maxWindowWidth / WindowRatio;
-            if (tempH <= maxWindowHeight)
-            {
+            double tempH = maxWindowWidth / windowRatio;
+            if (tempH <= maxWindowHeight) {
                 winW = maxWindowWidth;
                 winH = tempH;
-            }
-            else
-            {
+            } else {
                 winH = maxWindowHeight;
-                winW = winH * WindowRatio;
+                winW = winH * windowRatio;
             }
 
-            // 在窗口显示前设定宽高和位置
-            this.Width = winW;
-            this.Height = winH;
-            this.Left = (screenWidth - winW) / 2;
-            this.Top = (screenHeight - winH) / 2;
-
-            InitializeComponent();
-            UpdateGameAction();
+            Width = winW;
+            Height = winH;
+            Left = (screenWidth - winW) / 2;
+            Top = (screenHeight - winH) / 2;
         }
-
-        private void UpdateGameAction()
-        {
-            gameActionState = new ResourceChecker().Check();
-
-            switch (gameActionState)
-            {
-                case GameActionState.Download:
-                    GameAction.Content = "下载游戏";
-                    break;
-                case GameActionState.Update:
-                    GameAction.Content = "更新游戏";
-                    break;
-                case GameActionState.Ready:
-                    GameAction.Content = "启动游戏";
-                    break;
-            }
-        }
-
-        private void GameAction_Click(object sender, RoutedEventArgs e)
-        {
-            switch (gameActionState)
-            {
-                case GameActionState.Download:
-                    break;
-                case GameActionState.Update:
-                    break;
-                case GameActionState.Ready:
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// 关闭按钮点击事件
-        /// </summary>
-        private void MainClose_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        /// <summary>
-        /// 最小化按钮点击事件
-        /// </summary>
-        private void MainMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            this.WindowState = WindowState.Minimized;
-        }
-
-        /// <summary>
-        /// 顶部拖动区域 — 按住拖拽移动窗口
-        /// </summary>
-        private void MainDragMove(object sender, MouseButtonEventArgs e)
-        {
-            this.DragMove();
-        }
-
     }
 }
