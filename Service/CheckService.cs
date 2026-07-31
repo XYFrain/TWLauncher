@@ -15,7 +15,7 @@ namespace TWLauncher.Service {
         // 扫描的文件总数（包括已存在的）
         public static int TotalCount { get; private set; }
         // 所有缺失文件的总字节数
-        public static long TotalBytes { get; private set; }
+        public static long TotalBytes { get; set; }
 
         /// <summary>
         /// 扫描所有本地文件（jar / libraries / natives / assets），

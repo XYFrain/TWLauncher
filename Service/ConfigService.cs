@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Web.Script.Serialization;
+using TWLauncher.Models;
 using TWLauncher.Utils;
 
 namespace TWLauncher.Service {
@@ -10,15 +13,15 @@ namespace TWLauncher.Service {
     internal static class ConfigService {
 
         private static readonly string ConfigPath = Paths.LauncherConfigPath;
-
         private static Dictionary<string, object> _config;
+        private static ObservableCollection<JavaPath> javaPathList = new ObservableCollection<JavaPath>();
+        private static bool _javaPathListEventRegistered;
 
         public static string JavaPath {
             get { if (_config == null) Load(); return JsonUtil.TryGetString(_config, "javaPath", out var s) ? s : ""; }
             set { if (_config == null) Load(); _config["javaPath"] = value; Save(); }
         }
 
-        /// <summary>玩家名（离线模式）。</summary>
         public static string PlayerName {
             get { if (_config == null) Load(); return JsonUtil.TryGetString(_config, "playerName", out var s) ? s : "User"; }
             set { if (_config == null) Load(); _config["playerName"] = value; Save(); }
@@ -29,44 +32,35 @@ namespace TWLauncher.Service {
             set { if (_config == null) Load(); _config["maxMemory"] = value; Save(); }
         }
 
-        public static List<Dictionary<string, string>> JavaList {
+        public static ObservableCollection<JavaPath> JavaPathList {
             get {
                 if (_config == null) Load();
-                var result = new List<Dictionary<string, string>>();
-                if (_config.TryGetValue("javaPathList", out var obj) && obj is object[] arr) {
+                if (javaPathList.Count == 0 && _config.TryGetValue("javaPathList", out var obj) && obj is object[] arr) {
                     foreach (var item in arr) {
                         if (item is Dictionary<string, object> dict) {
-                            result.Add(new Dictionary<string, string> {
-                                ["path"] = dict.TryGetValue("path", out var p) ? p?.ToString() ?? "" : "",
-                                ["version"] = dict.TryGetValue("version", out var v) ? v?.ToString() ?? "" : ""
-                            });
+                            string path = dict.TryGetValue("path", out var p) ? p?.ToString() ?? "" : "";
+                            string version = dict.TryGetValue("version", out var v) ? v?.ToString() ?? "" : "";
+                            javaPathList.Add(new JavaPath(path, version));
                         }
                     }
                 }
-                return result;
-            }
-            set {
-                if (_config == null) Load();
-                var arr = new object[value.Count];
-                for (int i = 0; i < value.Count; i++) {
-                    var item = new Dictionary<string, object> { ["path"] = value[i]["path"] };
-                    if (value[i].ContainsKey("version"))
-                        item["version"] = value[i]["version"];
-                    arr[i] = item;
+                if (!_javaPathListEventRegistered) {
+                    javaPathList.CollectionChanged += (s, e) => {
+                        if (_config == null) Load();
+                        var saveArr = new object[javaPathList.Count];
+                        for (int i = 0; i < javaPathList.Count; i++) {
+                            saveArr[i] = new Dictionary<string, object> {
+                                ["path"] = javaPathList[i].Path,
+                                ["version"] = javaPathList[i].Version
+                            };
+                        }
+                        _config["javaPathList"] = saveArr;
+                        Save();
+                    };
+                    _javaPathListEventRegistered = true;
                 }
-                _config["javaPathList"] = arr;
-                Save();
+                return javaPathList;
             }
-        }
-
-        public static List<(string path, string displayName)> GetJavaEntries() {
-            var result = new List<(string path, string displayName)>();
-            foreach (var entry in JavaList) {
-                string path = entry["path"];
-                string version = entry.ContainsKey("version") ? entry["version"] : "";
-                result.Add((path, string.Format("Java {0}: {1}", version, path)));
-            }
-            return result;
         }
 
         // 磁盘 → 内存
@@ -83,7 +77,8 @@ namespace TWLauncher.Service {
                 _config = new Dictionary<string, object> {
                     { "playerName", "User" },
                     { "maxMemory", 4096 },
-                    { "javaPath", "H:\\Java\\jdk-1.8\\bin\\" }
+                    { "javaPath", "" },
+                    { "javaPathList", new object[0] }
                 };
 
             string json = new JavaScriptSerializer().Serialize(_config);

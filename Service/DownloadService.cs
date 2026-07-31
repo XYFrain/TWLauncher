@@ -14,13 +14,14 @@ namespace TWLauncher.Service {
         /// <summary>
         /// 并发下载 CheckService 清单中的所有资源文件。
         /// </summary>
-        public static async Task DownloadResourcesAsync(IProgress<ProgressViewModel> progress, CancellationTokenSource cts) {
+        public static async Task DownloadResourcesAsync(IProgress<ProgressInfo> progress, CancellationTokenSource cts) {
             var ct = cts.Token; // 取消令牌
             var items = CheckService.Items; // 缺失文件下载列表 
             long totalBytes = CheckService.TotalBytes; // 所有缺失文件的总字节数
             int totalFiles = items.Count; // 总共多少个文件要下载
             long downloadBytes = 0; // 已下载字节数
             int downloadFiles = 0; // 已完成文件数
+            var completedItems = new List<ResourceItem>(); // 已成功下载的文件
 
             LogUtil.Info(string.Format("[下载] 开始下载，共 {0} 个文件, {1}", totalFiles, ByteUtil.Format(totalBytes)));
 
@@ -55,6 +56,12 @@ namespace TWLauncher.Service {
                 } catch (OperationCanceledException) {
                     if (firstError == null) {
                         LogUtil.Info("[下载] 用户取消");
+                        long removedBytes = 0;
+                        foreach (var item in completedItems) {
+                            items.Remove(item);
+                            removedBytes += item.Size;
+                        }
+                        CheckService.TotalBytes -= removedBytes;
                         throw;
                     }
                 } catch (Exception ex) {
@@ -69,9 +76,10 @@ namespace TWLauncher.Service {
                 }
 
                 if (firstError == null) {
+                    if (doneItem != null) completedItems.Add(doneItem);
                     long current = downloadBytes += size;
                     int currentFiles = ++downloadFiles;
-                    progress.Report(new ProgressViewModel {
+                    progress.Report(new ProgressInfo {
                         Percent = totalFiles > 0 ? currentFiles * 100.0 / totalFiles : 100,
                         StageText = string.Format("正在下载 {0}/{1} 文件  {2}/{3}",
                             currentFiles, totalFiles, ByteUtil.Format(current), ByteUtil.Format(totalBytes)),
@@ -85,6 +93,8 @@ namespace TWLauncher.Service {
                 throw firstError;
             }
 
+            items.Clear();
+            CheckService.TotalBytes = 0;
             LogUtil.Info("[下载] 全部文件下载完成");
         }
     }

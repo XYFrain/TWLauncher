@@ -42,21 +42,39 @@ namespace TWLauncher.Service {
         /// <summary>检测已安装 Java，配置文件有则复用，无则全盘扫描。</summary>
         public static async Task CheckJavaAsync() {
             LogUtil.Info("[Java] 开始检测...");
-            var javaList = ConfigController.JavaList;
+            var javaList = ConfigController.JavaPathList;
             if (javaList.Count == 0) {
                 LogUtil.Info("[Java] 配置无缓存，开始全盘扫描...");
-                javaList = await JavaService.CheckAsync();
+                var detected = await JavaService.CheckAsync();
+                foreach (var java in detected)
+                    javaList.Add(java);
                 if (javaList.Count == 0) {
                     LogUtil.Error("[Java] 未检测到 Java 17+");
-                    MessageBox.Show("未检测到 Java 17+，请安装后重试。", "Java 缺失",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    Application.Current?.Shutdown();
-                    return;
+                    var choice = MessageBox.Show("未检测到 Java 17+，是否手动选择？", "Java 缺失",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (choice == MessageBoxResult.No) {
+                        Application.Current?.Shutdown();
+                        return;
+                    }
+
+                    var validated = JavaUtil.PickJava();
+                    if (validated == null) {
+                        Application.Current?.Shutdown();
+                        return;
+                    }
+                    javaList.Add(validated);
+                    SettingsViewModel.Instance.JavaPath = validated.Path;
+                    LogUtil.Info(string.Format("[Java] 用户手动选择: {0}", validated.Path));
                 }
-                ConfigController.JavaList = javaList;
                 LogUtil.Info(string.Format("[Java] 扫描完成，找到 {0} 个", javaList.Count));
             } else
                 LogUtil.Info(string.Format("[Java] 复用配置缓存，{0} 个", javaList.Count));
+
+            // 如果当前 javaPath 为空，自动填入第一个
+            if (string.IsNullOrEmpty(ConfigController.JavaPath) && javaList.Count > 0) {
+                SettingsViewModel.Instance.JavaPath = javaList[0].Path;
+                LogUtil.Info(string.Format("[Java] 自动选择第一个 Java: {0}", javaList[0].Path));
+            }
         }
 
         /// <summary>下载并合并 JSON，生成 Minecraft.json 与资源索引。</summary>

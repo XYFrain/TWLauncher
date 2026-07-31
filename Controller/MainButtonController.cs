@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using TWLauncher.Service;
+using TWLauncher.Models;
 using TWLauncher.Utils;
 
 namespace TWLauncher.Controller {
@@ -58,7 +59,7 @@ namespace TWLauncher.Controller {
             ProgressViewModel.Instance.Percent = 0;
 
             try {
-                var reporter = new Progress<ProgressViewModel>(p => {
+                var reporter = new Progress<ProgressInfo>(p => {
                     ProgressViewModel.Instance.Percent = p.Percent;
                     ProgressViewModel.Instance.StageText = p.StageText;
                 });

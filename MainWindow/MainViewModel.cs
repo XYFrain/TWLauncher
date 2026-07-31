@@ -5,13 +5,10 @@ using System.Windows.Input;
 using TWLauncher.Controller;
 
 namespace TWLauncher {
-    /// <summary>
-    /// 主窗口 ViewModel（单例）：暴露子 ViewModel 和命令供 XAML 绑定。
-    /// 流程逻辑委托给 MainButtonController。
-    /// </summary>
     internal class MainViewModel : INotifyPropertyChanged {
         public static MainViewModel Instance { get; } = new MainViewModel();
 
+        // ===================== 构造函数 =====================
         private MainViewModel() {
             GameActionCommand = new RelayCommand(MainButtonController.HandleMainButton);
             OpenSettingsCommand = new RelayCommand(OpenSettings);
@@ -19,19 +16,16 @@ namespace TWLauncher {
         }
 
         // ===================== 子 ViewModel（XAML 绑定） =====================
-
         public MainButtonViewModel MainButtonVM => MainButtonViewModel.Instance;
         public ProgressViewModel ProgressVM => ProgressViewModel.Instance;
         public SettingsViewModel SettingsVM => SettingsViewModel.Instance;
 
         // ===================== 命令（XAML 绑定） =====================
-
         public ICommand GameActionCommand { get; }
         public ICommand OpenSettingsCommand { get; }
         public ICommand CloseSettingsCommand { get; }
 
-        // ===================== 设置面板 =====================
-
+        // ===================== 方法 =====================
         private void OpenSettings() {
             SettingsViewModel.Instance.Visibility = Visibility.Visible;
         }

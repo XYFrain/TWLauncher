@@ -3,31 +3,29 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace TWLauncher {
-    /// <summary>
-    /// 主按钮 ViewModel（单例）：负责按钮文字和可用状态。
-    /// </summary>
     internal class MainButtonViewModel : INotifyPropertyChanged {
         public enum Phase { Checking, Launch, Download, Update, Downloading }
-
         public static MainButtonViewModel Instance { get; } = new MainButtonViewModel();
+
+        // ===================== 构造函数 =====================
         private MainButtonViewModel() { }
 
-        /// <summary>当前阶段。</summary>
+        // ===================== 属性（XAML 绑定） =====================
         public Phase Current { get; private set; }
-
         public string MainButtonText {
             get => mainButtonText;
             set { mainButtonText = value; OnPropertyChanged(); }
         }
         private string mainButtonText;
-
         public bool MainButtonEnabled {
             get => mainButtonEnabled;
             set { mainButtonEnabled = value; OnPropertyChanged(); }
         }
         private bool mainButtonEnabled;
 
-        /// <summary>切换阶段。</summary>
+        // ===================== 命令（XAML 绑定） =====================
+
+        // ===================== 方法 =====================
         public void SetPhase(Phase phase) {
             Current = phase;
             MainButtonEnabled = phase != Phase.Checking;

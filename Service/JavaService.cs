@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TWLauncher.Models;
 using TWLauncher.Utils;
 
 namespace TWLauncher.Service {
@@ -12,15 +11,9 @@ namespace TWLauncher.Service {
     /// </summary>
     internal static class JavaService {
 
-        // ===================== 公开方法 =====================
-
-        /// <summary>
-        /// 搜索 PATH → JAVA_HOME → 全盘 Java 目录 → 已保存配置。
-        /// 返回 [{path, version}]，仅含 Java 17+。
-        /// </summary>
-        public static async Task<List<Dictionary<string, string>>> CheckAsync() {
+        public static async Task<List<JavaPath>> CheckAsync() {
             var found = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var javaList = new List<Dictionary<string, string>>();
+            var javaList = new List<JavaPath>();
             var tasks = new List<Task>();
 
             // 1. PATH
@@ -49,7 +42,7 @@ namespace TWLauncher.Service {
 
             LogUtil.Info(string.Format("[Java] 找到 {0} 个:", javaList.Count));
             foreach (var e in javaList)
-                LogUtil.Info(string.Format("[Java]   Java {0}: {1}", e["version"], e["path"]));
+                LogUtil.Info(string.Format("[Java]   Java {0}: {1}", e.Version, e.Path));
 
             return javaList;
         }
@@ -57,7 +50,7 @@ namespace TWLauncher.Service {
         // ===================== 多路检测java =====================
 
         // 检测PATH目录
-        private static void ScanPath(HashSet<string> found, List<Dictionary<string, string>> javaList) {
+        private static void ScanPath(HashSet<string> found, List<JavaPath> javaList) {
             string pathEnv = Environment.GetEnvironmentVariable("PATH") ?? "";
             foreach (string dir in pathEnv.Split(Path.PathSeparator)) {
                 string javaPath = dir.Trim().Trim('"');
@@ -66,14 +59,14 @@ namespace TWLauncher.Service {
             }
         }
         // 检测JAVA_HOME
-        private static void ScanJavaHome(HashSet<string> found, List<Dictionary<string, string>> javaList) {
+        private static void ScanJavaHome(HashSet<string> found, List<JavaPath> javaList) {
             string javaHome = Environment.GetEnvironmentVariable("JAVA_HOME");
             if (string.IsNullOrEmpty(javaHome)) return;
             TryAdd(Path.Combine(javaHome.Trim(), "bin"), found, javaList);
         }
 
         // 扫描指定位置
-        private static void ScanJavaDir(string rootPath, HashSet<string> found, List<Dictionary<string, string>> javaList) {
+        private static void ScanJavaDir(string rootPath, HashSet<string> found, List<JavaPath> javaList) {
             try {
                 if (!Directory.Exists(rootPath)) return;
                 TryAdd(rootPath, found, javaList);
@@ -85,48 +78,15 @@ namespace TWLauncher.Service {
         // ===================== 内部方法 =====================
 
         // 检测javaw能否正常运行 & 版本 ≥ 17
-        private static void TryAdd(string dir, HashSet<string> found, List<Dictionary<string, string>> javaList) {
-            // 规范化 → 去重
+        private static void TryAdd(string dir, HashSet<string> found, List<JavaPath> javaList) {
             try { dir = Path.GetFullPath(dir); } catch { }
             if (!dir.EndsWith("\\")) dir += "\\";
             if (!found.Add(dir)) return;
 
-            string javawPath = dir + "javaw.exe";
-            if (!File.Exists(javawPath)) return;
-
-            // 执行 javaw -version，解析主版本号，过滤 < 17
-            int major = 0; string raw = null;
-            try {
-                var psi = new ProcessStartInfo {
-                    FileName = javawPath,
-                    Arguments = "-version",
-                    UseShellExecute = false,
-                    RedirectStandardError = true,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                };
-                using (var proc = Process.Start(psi)) {
-                    string output = proc.StandardError.ReadToEnd() + proc.StandardOutput.ReadToEnd();
-                    if (!proc.WaitForExit(5000)) { proc.Kill(); return; }
-                    if (proc.ExitCode != 0) return;
-
-                    var match = Regex.Match(output, @"version ""?([^""\s]+)""?");
-                    if (!match.Success) return;
-
-                    raw = match.Groups[1].Value;
-                    if (raw.StartsWith("1."))
-                        int.TryParse(raw.Substring(2, raw.IndexOf('.', 2) - 2), out major);
-                    else
-                        int.TryParse(raw.Substring(0, raw.IndexOf('.')), out major);
-
-                    if (major < 17) return;
-                }
-            } catch { return; }
-
-            javaList.Add(new Dictionary<string, string> {
-                ["path"] = dir,
-                ["version"] = raw
-            });
+            var javaPath = JavaUtil.TryValidateJava(dir);
+            if (javaPath != null)
+                javaList.Add(javaPath);
         }
+
     }
 }
